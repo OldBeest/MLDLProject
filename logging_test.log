@@ -1,0 +1,12 @@
+INFO:scraper.py:start scrapping scrap_melon function at 2024-12-17 02:15:10
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------
+ERROR:scraper.py:scrap_data function at 2024-12-17 02:15:10
+Traceback (most recent call last):
+  File "c:\Users\Harvey\Desktop\Codes\Python\NLP\LyricToImage\tools\scraper.py", line 140, in scrap_data
+    scrap_melon()
+  File "c:\Users\Harvey\Desktop\Codes\Python\NLP\LyricToImage\tools\scraper.py", line 19, in wrapper
+    sleep_t = func()
+  File "c:\Users\Harvey\Desktop\Codes\Python\NLP\LyricToImage\tools\scraper.py", line 38, in scrap_melon
+    with open(f'../assets/data/stage1/scrapper/melon/melon_scrap_{genre}_{time.strftime("%Y-%m-%d_%H%M%S", time.localtime())}.html', 'w', encoding='utf-8') as file:
+FileNotFoundError: [Errno 2] No such file or directory: '../assets/data/stage1/scrapper/melon/melon_scrap_ballad_2024-12-17_021510.html'
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------

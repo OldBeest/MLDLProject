@@ -1,0 +1,21 @@
+INFO:scraper.py:start scrapping scrap_melon function at 2024-12-17 02:15:43
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------
+INFO:scraper.py:end scrapping scrap_melon funtion at 2024-12-17 02:32:52
+INFO:scraper.py:process_time :  1028.7973 s
+INFO:scraper.py:process_time without sleep :  130.9886 s
+
+INFO:scraper.py:start scrapping scrap_genie function at 2024-12-17 02:32:52
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------
+INFO:scraper.py:end scrapping scrap_genie funtion at 2024-12-17 02:44:01
+INFO:scraper.py:process_time :  669.1769 s
+INFO:scraper.py:process_time without sleep :  66.2220 s
+
+INFO:scraper.py:start scrapping scrap_bugs function at 2024-12-17 02:44:01
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------
+INFO:scraper.py:end scrapping scrap_bugs funtion at 2024-12-17 03:02:50
+INFO:scraper.py:process_time :  1128.7698 s
+INFO:scraper.py:process_time without sleep :  219.1854 s
+

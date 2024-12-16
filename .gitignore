@@ -2,3 +2,5 @@
 *.safetensors
 *.pkl
 *.json
+*.html
+__pycache__
