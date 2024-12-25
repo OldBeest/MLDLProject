@@ -15,3 +15,32 @@ INFO:scraper.py:process_time :  1087.1743 s
 INFO:scraper.py:process_time without sleep :  176.3437 s
 
 INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------
+INFO:scraper.py:start scrapping scrap_melon function at 2024-12-26 00:04:39
+ERROR:scraper.py:scrap_data function at 2024-12-26 00:05:05
+Traceback (most recent call last):
+  File "C:\Users\Harvey\Desktop\Codes\Python\NLP\LyricToImage\tools\scraper.py", line 139, in scrap_data
+    scrap_melon()
+  File "C:\Users\Harvey\Desktop\Codes\Python\NLP\LyricToImage\tools\scraper.py", line 18, in wrapper
+    sleep_t = func()
+  File "C:\Users\Harvey\Desktop\Codes\Python\NLP\LyricToImage\tools\scraper.py", line 57, in scrap_melon
+    time.sleep(sleep1)
+KeyboardInterrupt
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------
+INFO:scraper.py:start scrapping scrap_melon function at 2024-12-26 00:09:53
+INFO:scraper.py:end scrapping scrap_melon funtion at 2024-12-26 00:28:36
+INFO:scraper.py:process_time :  1122.9685 s
+INFO:scraper.py:process_time without sleep :  215.3334 s
+
+INFO:scraper.py:start scrapping scrap_genie function at 2024-12-26 00:28:36
+INFO:scraper.py:end scrapping scrap_genie funtion at 2024-12-26 00:39:54
+INFO:scraper.py:process_time :  677.8615 s
+INFO:scraper.py:process_time without sleep :  63.3611 s
+
+INFO:scraper.py:start scrapping scrap_bugs function at 2024-12-26 00:39:54
+INFO:scraper.py:end scrapping scrap_bugs funtion at 2024-12-26 00:58:14
+INFO:scraper.py:process_time :  1099.6776 s
+INFO:scraper.py:process_time without sleep :  188.7911 s
+
+INFO:scraper.py:------------------------------------------------------------------------------------------------------------------------------------------------------

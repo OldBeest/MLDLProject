@@ -5,4 +5,4 @@
 *.html
 __pycache__
 *.csv
-./LyricToImage/tools/logging_test.log
+*.log
