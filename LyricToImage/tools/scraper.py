@@ -325,7 +325,7 @@ def genie_parser():
                         
                     f.write(f'\"{info_list[2]}\",{d_songid},\"{d_songname}\",{d_artistid},{info_list[0]},{d_albumid},\"{info_list[1]}\",{info_list[3]},{playcnt},{listencnt},{likecnt},\"{lyric}\"\n')
 @process_time                    
-def bugs_parer():
+def bugs_parser():
     # top 100 페이지 전처리
 
     current_folder = Path.cwd() # 현재 폴더
@@ -424,7 +424,7 @@ def parse_data(logger):
         logger.info('-'*150)
         melon_parser()
         genie_parser()
-        bugs_parer()
+        bugs_parser()
         logger.info('-'*150)
     except:
         log_time_str = time.strftime("%Y-%m-%d %H:%M:%S")
