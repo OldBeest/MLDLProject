@@ -16,13 +16,16 @@ def process_time(func):
     def wrapper():
         start = time.time()
         start_time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        logger.info(f"start scrapping {func.__name__} function at {start_time_str}")
+        logger.info(f"start {func.__name__} function at {start_time_str}")
+        
         
         sleep_t = func()
-        
+        if sleep_t is None:
+            sleep_t = 0
+                    
         end = time.time()
         end_time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        logger.info(f"end scrapping {func.__name__} funtion at {end_time_str}")
+        logger.info(f"end {func.__name__} funtion at {end_time_str}")
         logger.info(f"process_time : {end - start: .4f} s")
         logger.info(f"process_time without sleep : {end - start - sleep_t: .4f} s\n")
         
@@ -52,8 +55,8 @@ def scrap_melon():
             song_rank.append(song.attrs['data-song-no'])
         
         for rank, songid in enumerate(song_rank):
-            # res1 = requests.get(f"https://www.melon.com/song/lyrics.htm?songId={songid}", headers=headers)
-            res1 = requests.get(f"https://www.melon.com/song/detail.htm?songId={songid}", headers=headers)
+            res1 = requests.get(f"https://www.melon.com/song/lyrics.htm?songId={songid}", headers=headers)
+            # res1 = requests.get(f"https://www.melon.com/song/detail.htm?songId={songid}", headers=headers)
             soup1 = bs(res1.content, "html.parser", from_encoding='utf-8')
             with open(f'../assets/data/stage1/scrapper/melon/top100/{genre}/melon_scrap_{time.strftime("%Y-%m-%d_%H%M%S", time.localtime())}_{genre}_{rank + 1:03d}_of_top100.html', 'w', encoding='utf-8') as file:
                 file.write(soup1.prettify())            
@@ -111,7 +114,7 @@ def scrap_bugs():
         ymd = str(int(time.strftime("%Y%m%d")) - 1)
         res = requests.get(f"https://music.bugs.co.kr/chart/track/day/{code}?chartdate={ymd}", headers=headers)
         soup = bs(res.content, "html.parser", from_encoding='utf-8')
-        with open(f'../assets/data/stage1/scrapper/bugs/bugs_scrap_{time.strftime("%Y-%m-%d_%H%M%S", time.localtime())}_{genre}.html', 'w', encoding='utf-8') as file:
+        with open(f'../assets/data/stage1/scrapper/bugs/bugs_scrap_{time.strftime("%Y-%m-%d_%H%M%S", time.localtime())}_{genre}.html', 'w', encoding='UTF8') as file:
             file.write(soup.prettify())
         
         tbody = soup.find('tbody')
@@ -128,7 +131,7 @@ def scrap_bugs():
         for rank, songid in enumerate(song_rank):
             res1 = requests.get(f"https://music.bugs.co.kr/track/{songid}?wl_ref=list_tr_08_chart", headers=headers)
             soup1 = bs(res1.content, "html.parser", from_encoding='utf-8')
-            with open(f'../assets/data/stage1/scrapper/bugs/top100/{genre}/bugs_scrap_{time.strftime("%Y-%m-%d_%H%M%S", time.localtime())}_{genre}_{rank + 1:03d}_of_top100.html', 'w', encoding='utf-8' ) as file:
+            with open(f'../assets/data/stage1/scrapper/bugs/top100/{genre}/bugs_scrap_{time.strftime("%Y-%m-%d_%H%M%S", time.localtime())}_{genre}_{rank + 1:03d}_of_top100.html', 'w', encoding='UTF8') as file:
                 file.write(soup1.prettify())            
             
             sleep1 = random.random() + 1
@@ -144,7 +147,7 @@ def melon_parser():
 
     current_folder = Path.cwd() # 현재 폴더
     parent_folder = current_folder.parent # 상위 폴더 이동
-    melon_folder = os.path.join(str(parent_folder) + '\\assets\data\stage1\scrapper\melon') # 크롤링한 Html 폴더 이동
+    melon_folder = os.path.join(str(parent_folder) + '\\assets\\data\\stage1\\scrapper\\melon') # 크롤링한 Html 폴더 이동
     Path(f'{melon_folder}\\result').mkdir(parents=True, exist_ok=True) # 결과 폴더 생성
 
     ranking_data_html = os.listdir(melon_folder)[:-1] # result 폴더 제외한 html파일
@@ -155,11 +158,11 @@ def melon_parser():
             # csv 파일명 포매팅
             file_name = re.search(r'\d{4}-\d{2}-\d{2}', genre_rank_html).group() # 날짜부분 추출
             genre_name = re.search(r'([a-zA-Z&]+)\.html$', genre_rank_html).group(1) # 장르부분 추출
-            with open(f'{melon_folder}\{genre_rank_html}', 'r') as file:
+            with open(f'{melon_folder}\\{genre_rank_html}', 'r', encoding='UTF8') as file:
                 soup = bs(file, 'html.parser')
                 top100 = soup.find_all("tr", {"class": "lst50"}) + soup.find_all("tr", {"class": "lst100"}) # 100위까지 정보 합침
                              
-                with open(f'{melon_folder}\\result\{file_name}_{genre_name}.csv', 'w') as f:
+                with open(f'{melon_folder}\\result\\{file_name}_{genre_name}.csv', 'w', encoding='UTF8') as f:
                     f.write("genre,rank,songid,songname,artistid,artistname,albumid,albumname\n")
                     for row in top100:
                         rank = row.find("span", {"class": "rank"}).text.strip()
@@ -178,16 +181,16 @@ def melon_parser():
 
 
     for genre_folder in top100_folders: # 장르별 처리
-        song_data_htmls = os.listdir(os.path.join(top100_folder_path) + f"\{genre_folder}") # Html 파일 검색
+        song_data_htmls = os.listdir(os.path.join(top100_folder_path) + f"\\{genre_folder}") # Html 파일 검색
 
-        with open(f'{melon_folder}\\result\{file_name}_{genre_folder}_songdata.csv', 'w') as f:
+        with open(f'{melon_folder}\\result\\{file_name}_{genre_folder}_songdata.csv', 'w', encoding='UTF8') as f:
             # f.write("genre,songid,songname,artistid,artistname,albumid,albumname,release,flac,lyric,lyricist,composer,arranger\n")
             f.write("genre,songid,songname,artistid,artistname,albumid,albumname,release,flac,lyric\n")
             for song_data_html in song_data_htmls: # Html 파일별 처리
-                song_data_path = os.path.join(top100_folder_path + f'\{genre_folder}\{song_data_html}')
+                song_data_path = os.path.join(top100_folder_path + f'\\{genre_folder}\\{song_data_html}')
 
                 # Html 문서 읽기
-                with open(song_data_path, 'r') as file:
+                with open(song_data_path, 'r', encoding='UTF8') as file:
                     d_soup = bs(file, 'html.parser')
                     # 음악 id
                     d_songid = d_soup.find("button", {"class": "button_etc like type02"}).attrs['data-song-no'] 
@@ -247,7 +250,7 @@ def melon_parser():
 def genie_parser():
     current_folder = Path.cwd() # 현재 폴더
     parent_folder = current_folder.parent # 상위 폴더 이동
-    genie_folder = os.path.join(str(parent_folder) + '\\assets\data\stage1\scrapper\genie') # 크롤링한 Html 폴더 이동
+    genie_folder = os.path.join(str(parent_folder) + '\\assets\\data\\stage1\\scrapper\\genie') # 크롤링한 Html 폴더 이동
     Path(f'{genie_folder}\\result').mkdir(parents=True, exist_ok=True) # 결과 폴더 생성
 
     ranking_data_html_origin = os.listdir(genie_folder) # result 폴더 제외한 html파일
@@ -260,11 +263,11 @@ def genie_parser():
         file_name = re.search(r'\d{4}-\d{2}-\d{2}', genre_rank_htmls[0]).group() # 날짜부분 추출
         genre_name = re.search(r'([a-zA-Z&]+)_page([0-9])\.html$', genre_rank_htmls[0]).group(1) # 장르부분 추출
         
-        with open(f'{genie_folder}\\result\{file_name}_{genre_name}.csv', 'w') as f:
+        with open(f'{genie_folder}\\result\\{file_name}_{genre_name}.csv', 'w', encoding='UTF8') as f:
             f.write(f'genre,rank,songid,songname,artistid,artistname,albumid,albumname\n')
             for genre_rank_html in genre_rank_htmls:
                 if genre_rank_html.find(".html") != -1: # html 파일만 처리                
-                    with open(f'{genie_folder}\{genre_rank_html}', 'r') as file:
+                    with open(f'{genie_folder}\\{genre_rank_html}', 'r', encoding='UTF8') as file:
                         soups = bs(file, 'html.parser').find_all("tr", {"class": "list"})
                         for soup in soups:
                             rank_tag = soup.find("td", {"class": "number"})
@@ -291,15 +294,15 @@ def genie_parser():
     top100_folders = os.listdir(top100_folder_path) # ['kpop', 'ost', 'pop', 'trot']
 
     for genre_folder in top100_folders: # 장르별 처리
-        song_data_htmls = os.listdir(os.path.join(top100_folder_path) + f"\{genre_folder}") # Html 파일 검색
-        with open(f'{genie_folder}\\result\{file_name}_{genre_folder}_songdata.csv', 'w') as f:
+        song_data_htmls = os.listdir(os.path.join(top100_folder_path) + f"\\{genre_folder}") # Html 파일 검색
+        with open(f'{genie_folder}\\result\\{file_name}_{genre_folder}_songdata.csv', 'w', encoding='UTF8') as f:
             # f.write("genre,songid,songname,artistid,artistname,albumid,albumname,release,flac,lyric,lyricist,composer,arranger\n")
             f.write("genre,songid,songname,artistid,artistname,albumid,albumname,playtime,playcnt,listencnt,likecnt,lyric\n")
             for song_data_html in song_data_htmls: # Html 파일별 처리
-                song_data_path = os.path.join(top100_folder_path + f'\{genre_folder}\{song_data_html}')
+                song_data_path = os.path.join(top100_folder_path + f'\\{genre_folder}\\{song_data_html}')
                 
                 # Html 문서 읽기
-                with open(song_data_path, 'r') as file:
+                with open(song_data_path, 'r', encoding='UTF8') as file:
                     d_soup_org = bs(file, 'html.parser')
                     d_soup = d_soup_org.find("div", {"class": "song-main-infos"})
                     d_songid = d_soup_org.find("p", {"class": "song-button-zone"}).find_all("a")[1].attrs['songid']
@@ -330,7 +333,7 @@ def bugs_parser():
 
     current_folder = Path.cwd() # 현재 폴더
     parent_folder = current_folder.parent # 상위 폴더 이동
-    bugs_folder = os.path.join(str(parent_folder) + '\\assets\data\stage1\scrapper\\bugs') # 크롤링한 Html 폴더 이동
+    bugs_folder = os.path.join(str(parent_folder) + '\\assets\\data\\stage1\\scrapper\\bugs') # 크롤링한 Html 폴더 이동
     Path(f'{bugs_folder}\\result').mkdir(parents=True, exist_ok=True) # 결과 폴더 생성
 
     ranking_data_html = os.listdir(bugs_folder)[:-1] # result 폴더 제외한 html파일
@@ -340,9 +343,9 @@ def bugs_parser():
             # csv 파일명 포매팅
             file_name = re.search(r'\d{4}-\d{2}-\d{2}', genre_rank_html).group() # 날짜부분 추출
             genre_name = re.search(r'([a-zA-Z&]+)\.html$', genre_rank_html).group(1) # 장르부분 추출
-            with open(f'{bugs_folder}\\result\{file_name}_{genre_name}.csv', 'w') as f:
+            with open(f'{bugs_folder}\\result\\{file_name}_{genre_name}.csv', 'w', encoding='UTF8') as f:
                 f.write("genre,rank,songid,songname,artistid,artistname,albumid,albumname\n")
-                with open(f'{bugs_folder}\{genre_rank_html}', 'r') as file:
+                with open(f'{bugs_folder}\\{genre_rank_html}', 'r', encoding='UTF8') as file:
                     soup = bs(file, 'html.parser')
                     top100 = soup.find("tbody").find_all("tr")
                     
@@ -362,13 +365,13 @@ def bugs_parser():
     top100_folders = os.listdir(top100_folder_path) # ['ballad', 'dance', 'ost', 'pop', 'rap&hiphop', 'trot']                  
                                 
     for genre_folder in top100_folders: # 장르별 처리
-        song_data_htmls = os.listdir(os.path.join(top100_folder_path) + f"\{genre_folder}") # Html 파일 검색
+        song_data_htmls = os.listdir(os.path.join(top100_folder_path) + f"\\{genre_folder}") # Html 파일 검색
         
-        with open(f'{bugs_folder}\\result\{file_name}_{genre_folder}_songdata.csv', 'w') as f:
+        with open(f'{bugs_folder}\\result\\{file_name}_{genre_folder}_songdata.csv', 'w', encoding='UTF8') as f:
             f.write("genre,songid,songname,artistid,artistname,albumid,albumname,playtime,likecnt,flac,lyric\n")
             for song_data_html in song_data_htmls:
-                song_data_path = os.path.join(top100_folder_path + f'\{genre_folder}\{song_data_html}')
-                with open(song_data_path, 'r') as file:
+                song_data_path = os.path.join(top100_folder_path + f'\\{genre_folder}\\{song_data_html}')
+                with open(song_data_path, 'r', encoding='UTF8') as file:
                     soup = bs(file, 'html.parser')
                     songid = soup.find("section", {"class": "commentsCommon sectionPadding"}).attrs['cmt_target_id']
                     songname = soup.find("article").find("header").find("h1").text.strip()
@@ -409,7 +412,6 @@ def bugs_parser():
                     
 def scrap_data(logger):
     try:
-        logger.info('-'*150)
         scrap_melon()
         scrap_genie()
         scrap_bugs()
@@ -421,7 +423,6 @@ def scrap_data(logger):
         
 def parse_data(logger):
     try:
-        logger.info('-'*150)
         melon_parser()
         genie_parser()
         bugs_parser()
